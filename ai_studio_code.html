@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI QADAM KIDS — Білім порталы</title>
+<style>
+:root{
+  --ink:#18233b;--muted:#64748b;--primary:#5b4bdb;--primary-light:#eeecff;
+  --secondary:#16a6a1;--paper:#f5f7ff;--white:#fff;--line:#e4e8f2;
+  --good:#16834a;--bad:#c0394b;--accent:#f59e0b;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#eef2ff,#e8fbf8);color:var(--ink);min-height:100vh}
+.wrap{max-width:960px;margin:0 auto;padding:20px 16px 60px}
+
+/* Навигация */
+.navbar{display:flex;align-items:center;justify-content:space-between;background:var(--white);border:1px solid var(--line);border-radius:18px;padding:12px 20px;margin-bottom:20px;box-shadow:0 4px 14px rgba(0,0,0,0.03)}
+.nav-brand{font-size:18px;font-weight:900;letter-spacing:1px;color:var(--primary)}
+.nav-links{display:flex;gap:8px;flex-wrap:wrap}
+.nav-btn{background:none;border:none;padding:9px 14px;border-radius:10px;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;transition:.2s}
+.nav-btn:hover{background:var(--primary-light);color:var(--primary)}
+.nav-btn.active{background:var(--primary);color:#fff}
+
+/* Батырмалар & Карточкалар */
+.hero{background:linear-gradient(120deg,#5145cd,#8067ee 58%,#19aaa4);color:white;padding:28px;border-radius:24px;box-shadow:0 12px 30px #5145cd2b;margin-bottom:20px}
+.brand{font-size:13px;font-weight:700;letter-spacing:2px;opacity:.9}
+h1{font-size:clamp(24px,4vw,36px);margin:10px 0 8px}
+.hero p{margin:0;line-height:1.5;opacity:.95}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.pill{background:#ffffff26;border:1px solid #ffffff55;padding:6px 12px;border-radius:999px;font-size:13px}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:22px;margin-top:18px;box-shadow:0 8px 22px #24345b0b}
+h2{font-size:20px;margin:0 0 16px}
+
+/* Пән таңдау парағы */
+.subjects-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px}
+.subj-card{background:var(--white);border:2px solid var(--line);border-radius:20px;padding:24px;text-align:center;cursor:pointer;transition:.25s;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.subj-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 12px 24px #5b4bdb1a}
+.subj-icon{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:32px;margin-bottom:14px}
+.icon-math{background:#e0f2fe;color:#0284c7}
+.icon-lit{background:#fef3c7;color:#d97706}
+.subj-title{font-size:20px;font-weight:800;margin-bottom:8px}
+.subj-desc{font-size:14px;color:var(--muted);line-height:1.4;margin-bottom:16px}
+
+/* Формалар */
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{font-size:14px;font-weight:700;display:block;margin-bottom:7px}
+input[type=text], select{width:100%;padding:12px 14px;border:1px solid #cfd6e6;border-radius:12px;font-size:15px;outline:none}
+input:focus, select:focus{border-color:var(--primary);box-shadow:0 0 0 3px #5b4bdb18}
+.progress-head{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:13px;margin-bottom:9px}
+.track{height:9px;background:#edf0f8;border-radius:20px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:width .2s}
+
+/* Сұрақтар блогы */
+.question{padding:18px 0;border-bottom:1px solid var(--line)}
+.question:last-child{border-bottom:0;padding-bottom:0}
+.qtitle{font-weight:700;line-height:1.45;margin-bottom:12px}
+.qnum{display:inline-grid;place-items:center;background:#eeecff;color:var(--primary);width:28px;height:28px;border-radius:9px;margin-right:8px;font-size:13px}
+.options{display:grid;gap:9px}
+.option{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);padding:12px 13px;border-radius:12px;cursor:pointer;line-height:1.4;transition:.15s}
+.option:hover{border-color:#aaa0f4;background:#faf9ff}
+.option input{margin-top:3px;accent-color:var(--primary);flex-shrink:0}
+.option:has(input:checked){border-color:var(--primary);background:#f4f2ff}
+
+/* Батырмалар */
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+button{border:0;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
+.primary{background:var(--primary);color:white}
+.primary:hover{opacity:.9}
+.secondary{background:#edf0f8;color:var(--ink)}
+.secondary:hover{background:#e2e8f0}
+.danger{background:#fee2e2;color:#991b1b}
+.danger:hover{background:#fecaca}
+
+/* Нәтижелер */
+.result{display:none}
+.scorebox{background:linear-gradient(120deg,#f0efff,#e8fbf7);padding:20px;border-radius:16px;text-align:center}
+.score{font-size:40px;font-weight:800;color:var(--primary);margin:5px 0}
+.small{font-size:13px;color:var(--muted)}
+.review{margin-top:14px}
+.review-item{padding:12px;border-radius:12px;margin:9px 0;background:#f7f8fc;line-height:1.45}
+.review-item.correct{border-left:4px solid var(--good)}
+.review-item.wrong{border-left:4px solid var(--bad)}
+.notice{font-size:13px;color:var(--muted);line-height:1.5;margin-top:12px}
+
+/* Оқу маршруты (Математика) */
+.route-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.route-step{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:14px;position:relative}
+.route-step.active{border-color:var(--primary);background:#f4f2ff}
+.step-num{font-size:12px;font-weight:800;color:var(--primary);margin-bottom:4px}
+.step-title{font-size:14px;font-weight:700}
+
+/* Мұғалім панелі */
+.filter-bar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.results-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+.results-table th, .results-table td{padding:12px 10px;text-align:left;border-bottom:1px solid var(--line)}
+.results-table th{background:#f8fafc;color:var(--muted);font-weight:700}
+.badge{padding:4px 8px;border-radius:6px;font-size:12px;font-weight:700}
+.badge-math{background:#e0f2fe;color:#0284c7}
+.badge-lit{background:#fef3c7;color:#d97706}
+
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+@media(max-width:640px){
+  .fields,.subjects-grid{grid-template-columns:1fr}
+  .navbar{flex-direction:column;gap:12px;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Навигация жолағы -->
+  <header class="navbar">
+    <div class="nav-brand">AI QADAM KIDS</div>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="switchTab('home')">Басты бет</button>
+      <button class="nav-btn" onclick="switchTab('math')">Математика</button>
+      <button class="nav-btn" onclick="switchTab('lit')">Әдебиеттік оқу</button>
+      <button class="nav-btn" onclick="switchTab('teacher')">Мұғалім панелі</button>
+    </div>
+  </header>
+
+  <!-- ================= 1. БАСТЫ БЕТ: ПӘН ТАҢДАУ ================= -->
+  <main id="tab-home" class="tab-content">
+    <section class="hero">
+      <div class="brand">БІЛІМГЕ БАСТАР ҚАДАМ</div>
+      <h1>Қош келдің, Жас зерделі!</h1>
+      <p>Өзіңе қажетті пәнді таңдап, біліміңді сына. Оқу маршрутын аяқтап, ең жоғары ұпайға қол жеткіз!</p>
+      <div class="meta">
+        <span class="pill">4-сынып</span>
+        <span class="pill">2 Негізгі пән</span>
+        <span class="pill">Онлайн бағалау</span>
+      </div>
+    </section>
+
+    <div class="subjects-grid">
+      <div class="subj-card" onclick="switchTab('math')">
+        <div class="subj-icon icon-math">📐</div>
+        <div class="subj-title">Математика</div>
+        <div class="subj-desc">Оқу маршруты бойынша тапсырмалар мен логикалық есептер кешені.</div>
+        <button class="primary" type="button">Сабақты бастау →</button>
+      </div>
+
+      <div class="subj-card" onclick="switchTab('lit')">
+        <div class="subj-icon icon-lit">📚</div>
+        <div class="subj-title">Әдебиеттік оқу</div>
+        <div class="subj-desc">«Даналық сөздер» тақырыбы бойынша 14 тест тапсырмасы. (Ең жоғары: 4,2 ұпай).</div>
+        <button class="primary" type="button">Тестке кіру →</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= 2. МАТЕМАТИКА ================= -->
+  <main id="tab-math" class="tab-content" style="display:none">
+    <section class="hero" style="background:linear-gradient(120deg,#0284c7,#38bdf8 65%,#16a6a1)">
+      <div class="brand">AI QADAM KIDS — МАТЕМАТИКА</div>
+      <h1>Математикалық сауаттылық</h1>
+      <p>Оқу маршрутын орындап, логикалық 5 сұраққа жауап беріңіз. Әр дұрыс жауап — 1 ұпай.</p>
+      <div class="meta"><span class="pill">4-сынып</span><span class="pill">5 сұрақ</span><span class="pill">Ең жоғары ұпай: 5</span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Оқу маршруты</h2>
+      <div class="route-grid">
+        <div class="route-step active"><div class="step-num">1-ҚАДАМ</div><div class="step-title">Көптаңбалы сандар</div></div>
+        <div class="route-step active"><div class="step-num">2-ҚАДАМ</div><div class="step-title">Амалдар реті</div></div>
+        <div class="route-step active"><div class="step-num">3-ҚАДАМ</div><div class="step-title">Теңдеу мен есеп</div></div>
+        <div class="route-step active"><div class="step-num">4-ҚАДАМ</div><div class="step-title">Логика және өлшемдер</div></div>
+      </div>
+
+      <h2>Оқушы туралы мәлімет</h2>
+      <div class="fields">
+        <div><label for="mathName">Оқушының аты-жөні</label><input id="mathName" type="text" placeholder="Аты-жөніңді жаз"></div>
+        <div><label for="mathClass">Сыныбы</label><input id="mathClass" type="text" placeholder="Мысалы: 4 «Б»"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <form id="mathForm">
+        <div id="mathQuestions"></div>
+        <div class="actions">
+          <button class="primary" type="submit">Тестті аяқтау</button>
+          <button class="secondary" type="button" onclick="document.getElementById('mathForm').reset()">Қайта бастау</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel result" id="mathResultPanel" aria-live="polite">
+      <h2>Математика нәтижесі</h2>
+      <div class="scorebox">
+        <div class="small">Жинаған ұпайың</div>
+        <div class="score" id="mathScoreVal">0 / 5</div>
+        <div id="mathSummary"></div>
+      </div>
+      <div class="review" id="mathReview"></div>
+      <div class="actions">
+        <button class="primary" type="button" id="mathWhatsAppBtn">Нәтижені мұғалімге WhatsApp-пен жіберу</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= 3. ӘДЕБИЕТТІК ОҚУ ================= -->
+  <main id="tab-lit" class="tab-content" style="display:none">
+    <section class="hero">
+      <div class="brand">AI QADAM KIDS</div>
+      <h1>Әдебиеттік оқу</h1>
+      <p><strong>Тақырып: Даналық сөздер</strong><br>14 тапсырмаға жауап бер. Әр дұрыс жауапқа — 0,3 ұпай.</p>
+      <div class="meta"><span class="pill">4-сынып</span><span class="pill">14 сұрақ</span><span class="pill">Ең жоғары ұпай: 4,2</span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Оқушы туралы мәлімет</h2>
+      <div class="fields">
+        <div><label for="studentName">Оқушының аты-жөні</label><input id="studentName" type="text" placeholder="Аты-жөніңді жаз"></div>
+        <div><label for="studentClass">Сыныбы</label><input id="studentClass" type="text" placeholder="Мысалы: 4 «А»"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="progress-head"><span>Орындалу барысы</span><span id="progressText">0 / 14 жауап</span></div>
+      <div class="track"><div class="bar" id="progressBar"></div></div>
+      <form id="quizForm">
+        <div id="questions"></div>
+        <div class="actions">
+          <button class="primary" type="submit" id="finishBtn">Тестті аяқтау</button>
+          <button class="secondary" type="button" id="resetBtn">Қайта бастау</button>
+        </div>
+      </form>
+      <p class="notice">Ескерту: тестті аяқтағаннан кейін нәтижең көрсетіледі. Мұғалімге WhatsApp арқылы жіберу үшін ашылған хабарламадағы «Жіберу» батырмасын бас.</p>
+    </section>
+
+    <section class="panel result" id="resultPanel" aria-live="polite">
+      <h2>Сенің нәтижең</h2>
+      <div class="scorebox">
+        <div class="small">Жинаған ұпайың</div>
+        <div class="score" id="scoreValue">0 / 4,2</div>
+        <div id="resultSummary"></div>
+      </div>
+      <div class="review" id="review"></div>
+      <div class="actions">
+        <button class="primary" type="button" id="whatsappBtn">Нәтижені мұғалімге WhatsApp-пен жіберу</button>
+        <button class="secondary" type="button" id="againBtn">Қайта орындау</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= 4. МҰҒАЛІМ ПАНЕЛІ ================= -->
+  <main id="tab-teacher" class="tab-content" style="display:none">
+    <section class="hero" style="background:linear-gradient(120deg,#1e293b,#475569)">
+      <div class="brand">МҰҒАЛІМ КУРАТОРЫ</div>
+      <h1>Мұғалім панелі</h1>
+      <p>Оқушылардың әр пән бойынша тапсырған тест нәтижелерін бөлек бақылау журналы.</p>
+    </section>
+
+    <section class="panel">
+      <div class="filter-bar">
+        <label for="subjectFilter" style="margin:0;font-size:14px">Пәнді таңдау:</label>
+        <select id="subjectFilter" onchange="renderTeacherResults()" style="width:auto;min-width:200px">
+          <option value="all">Барлық пәндер</option>
+          <option value="Математика">Математика</option>
+          <option value="Әдебиеттік оқу">Әдебиеттік оқу</option>
+        </select>
+        <button class="danger" style="margin-left:auto" onclick="clearTeacherData()">Тарихты тазалау</button>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Оқушының аты-жөні</th>
+              <th>Сыныбы</th>
+              <th>Пән</th>
+              <th>Дұрыс / Қате</th>
+              <th>Жинаған ұпайы</th>
+              <th>Уақыты</th>
+            </tr>
+          </thead>
+          <tbody id="teacherTableBody">
+            <!-- Деректер JS арқылы салынады -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>AI QADAM KIDS · Білімге бастар қадам!</footer>
+</div>
+
+<script>
+/* ================= НАВИГАЦИЯ ================= */
+function switchTab(tabId){
+  document.querySelectorAll('.tab-content').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.nav-btn').forEach(btn=>btn.classList.remove('active'));
+  document.getElementById('tab-'+tabId).style.display='block';
+  
+  const idx = {home:0, math:1, lit:2, teacher:3}[tabId];
+  if(idx!==undefined) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  if(tabId==='teacher') renderTeacherResults();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ================= ӘДЕБИЕТТІК ОҚУ ТЕСТ ДЕРЕКТЕРІ ================= */
+const questions = [
+ {q:"Даналық сөз дегеніміз не?",a:["Қызықты әңгіме","Терең мағыналы, тәрбиелік мәні бар сөз","Жаңылтпаш"],c:1},
+ {q:"Мақал-мәтелдер бізді неге үйретеді?",a:["Жалқаулыққа","Ойынға","Жақсылыққа, адамгершілікке"],c:2},
+ {q:"«Өнер алды – ...» мақалының жалғасын тап.",a:["Қызыл тіл","Білім","Еңбек"],c:0},
+ {q:"«Отан – оттан да ...»",a:["Жақсы","Ыстық","Биік"],c:1},
+ {q:"«Еңбек етсең ерінбей, ...»",a:["Тояды қарның тіленбей","Білім аласың","Досың көбейеді"],c:0},
+ {q:"«Білімді мыңды жығар» мақалының мағынасы қандай?",a:["Білімнің күші зор","Күшті адам жеңеді","Көп адам жеңеді"],c:0},
+ {q:"Даналық сөздерді кімдер айтқан?",a:["Тек балалар","Халық даналары, шешендер, ойшылдар","Спортшылар"],c:1},
+ {q:"«Жақсы сөз – жарым ырыс» мақалы нені білдіреді?",a:["Жақсы сөздің адамға жағымды әсерін","Көп сөйлеуді","Қатты сөйлеуді"],c:0},
+ {q:"Адам бойындағы жақсы қасиетті белгіле.",a:["Өтірік айту","Жалқаулық","Адалдық"],c:2},
+ {q:"«Бірлік болмай, тірлік болмас» мақалының мағынасы қандай?",a:["Бірлік пен татулық маңызды","Әркім өз бетінше жүруі керек","Жалғыз жұмыс істеу керек"],c:0},
+ {q:"Үлкенді қалай құрметтеу керек?",a:["Сөзін бөлмеу, сыйлау","Тыңдамау","Қарсы сөйлеу"],c:0},
+ {q:"Даналық сөздердің негізгі мақсаты қандай?",a:["Күлдіру","Тәрбиелеу, ой салу","Уақыт өткізу"],c:1},
+ {q:"«Кітап – білім бұлағы» деген сөздің мағынасы қандай?",a:["Кітаптан білім аламыз","Кітап су береді","Кітап ойыншық"],c:0},
+ {q:"Даналық сөздерді өмірде қалай қолданамыз?",a:["Тек жаттап аламыз","Мағынасын түсініп, жақсы істерімізге үлгі етеміз","Елемейміз"],c:1}
+];
+
+const letters=["А","Ә","Б"];
+const qRoot=document.getElementById("questions");
+questions.forEach((item,i)=>{
+ const section=document.createElement("div"); section.className="question";
+ const title=document.createElement("div"); title.className="qtitle";
+ title.innerHTML='<span class="qnum">'+(i+1)+'</span>'+item.q;
+ const opts=document.createElement("div"); opts.className="options";
+ item.a.forEach((answer,j)=>{
+   const label=document.createElement("label"); label.className="option";
+   const radio=document.createElement("input"); radio.type="radio"; radio.name="q"+i; radio.value=j;
+   radio.addEventListener("change",updateProgress);
+   const span=document.createElement("span"); span.textContent=letters[j]+") "+answer;
+   label.append(radio,span); opts.append(label);
+ });
+ section.append(title,opts); qRoot.append(section);
+});
+
+function updateProgress(){
+ const count=questions.filter((_,i)=>document.querySelector('#tab-lit input[name="q'+i+'"]:checked')).length;
+ document.getElementById("progressText").textContent=count+" / 14 жауап";
+ document.getElementById("progressBar").style.width=(count/questions.length*100)+"%";
+}
+
+let lastResult=null;
+document.getElementById("quizForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ const name=document.getElementById("studentName").value.trim();
+ const cls=document.getElementById("studentClass").value.trim();
+ if(!name||!cls){alert("Аты-жөнің мен сыныбыңды толтыр.");return;}
+ const unanswered=questions.findIndex((_,i)=>!document.querySelector('#tab-lit input[name="q'+i+'"]:checked'));
+ if(unanswered!==-1){alert((unanswered+1)+"-сұраққа жауап берілмеген. Барлық сұраққа жауап бер.");document.querySelectorAll("#tab-lit .question")[unanswered].scrollIntoView({behavior:"smooth",block:"center"});return;}
+ 
+ let correct=0; const answers=[];
+ questions.forEach((item,i)=>{
+   const selected=Number(document.querySelector('#tab-lit input[name="q'+i+'"]:checked').value);
+   if(selected===item.c)correct++;
+   answers.push({selected,correct:item.c});
+ });
+ 
+ const score=(correct*0.3).toFixed(1).replace(".",",");
+ lastResult={name,cls,correct,score,answers};
+ document.getElementById("scoreValue").textContent=score+" / 4,2";
+ document.getElementById("resultSummary").textContent="Дұрыс жауап: "+correct+" / 14 · Қате жауап: "+(14-correct);
+ 
+ const review=document.getElementById("review"); review.innerHTML="";
+ questions.forEach((item,i)=>{
+   const a=answers[i],ok=a.selected===item.c;
+   const div=document.createElement("div");div.className="review-item "+(ok?"correct":"wrong");
+   const status=ok?"✓ Дұрыс":"✗ Қате";
+   div.textContent=(i+1)+". "+status+". Дұрыс жауап: "+letters[item.c]+") "+item.a[item.c];
+   review.append(div);
+ });
+ document.getElementById("resultPanel").style.display="block";
+ document.getElementById("resultPanel").scrollIntoView({behavior:"smooth",block:"start"});
+
+ // Мұғалім журналына сақтау
+ saveResultToTeacher({
+   name, cls, subject: 'Әдебиеттік оқу',
+   details: `${correct} / ${questions.length}`,
+   score: `${score} / 4,2`
+ });
+});
+
+function sendWhatsApp(){
+ if(!lastResult)return;
+ const msg="AI QADAM KIDS — Әдебиеттік оқу\nТақырып: Даналық сөздер\nОқушы: "+lastResult.name+"\nСыныбы: "+lastResult.cls+"\nДұрыс жауап: "+lastResult.correct+"/14\nҚате жауап: "+(14-lastResult.correct)+"\nЖалпы ұпай: "+lastResult.score+" / 4,2";
+ window.open("https://wa.me/77074674640?text="+encodeURIComponent(msg),"_blank");
+}
+document.getElementById("whatsappBtn").addEventListener("click",sendWhatsApp);
+
+function resetQuiz(){
+ document.getElementById("quizForm").reset();
+ document.getElementById("resultPanel").style.display="none";
+ lastResult=null;updateProgress();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("resetBtn").addEventListener("click",resetQuiz);
+document.getElementById("againBtn").addEventListener("click",resetQuiz);
+
+/* ================= МАТЕМАТИКА ТАПСЫРМАЛАРЫ ================= */
+const mathQuestions = [
+  {q: "540 : 9 + 40 × 5 өрнегінің мәнін тап.", a: ["260", "240", "300"], c: 0},
+  {q: "Тіктөртбұрыштың ұзындығы 8 см, ені 4 см. Оның ауданы неге тең?", a: ["24 см²", "32 см²", "12 см²"], c: 1},
+  {q: "Белгісіз санды тап: x + 450 = 1000", a: ["450", "650", "550"], c: 2},
+  {q: "1 сағатта неше минут бар?", a: ["60 минут", "100 минут", "24 минут"], c: 0},
+  {q: "Әр қорапта 12 қарындаш бар. 4 осындай қорапта барлығы неше қарындаш бар?", a: ["36", "48", "52"], c: 1}
+];
+
+const mathRoot = document.getElementById("mathQuestions");
+mathQuestions.forEach((item,i)=>{
+  const section=document.createElement("div"); section.className="question";
+  const title=document.createElement("div"); title.className="qtitle";
+  title.innerHTML='<span class="qnum">'+(i+1)+'</span>'+item.q;
+  const opts=document.createElement("div"); opts.className="options";
+  item.a.forEach((ans, j)=>{
+    const label=document.createElement("label"); label.className="option";
+    const radio=document.createElement("input"); radio.type="radio"; radio.name="mq"+i; radio.value=j;
+    const span=document.createElement("span"); span.textContent=letters[j]+") "+ans;
+    label.append(radio,span); opts.append(label);
+  });
+  section.append(title,opts); mathRoot.append(section);
+});
+
+let lastMathResult = null;
+document.getElementById("mathForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  const name=document.getElementById("mathName").value.trim();
+  const cls=document.getElementById("mathClass").value.trim();
+  if(!name||!cls){alert("Аты-жөнің мен сыныбыңды толтыр.");return;}
+  const unanswered=mathQuestions.findIndex((_,i)=>!document.querySelector('input[name="mq'+i+'"]:checked'));
+  if(unanswered!==-1){alert((unanswered+1)+"-сұраққа жауап берілмеген.");return;}
+
+  let correct=0; const answers=[];
+  mathQuestions.forEach((item,i)=>{
+    const sel=Number(document.querySelector('input[name="mq'+i+'"]:checked').value);
+    if(sel===item.c) correct++;
+    answers.push({sel, c:item.c});
+  });
+
+  lastMathResult = {name, cls, correct, score: correct};
+  document.getElementById("mathScoreVal").textContent = correct + " / 5";
+  document.getElementById("mathSummary").textContent = `Дұрыс жауап: ${correct} / 5 · Қате жауап: ${5-correct}`;
+  
+  const rev = document.getElementById("mathReview"); rev.innerHTML = "";
+  mathQuestions.forEach((item,i)=>{
+    const a=answers[i], ok=a.sel===item.c;
+    const div=document.createElement("div"); div.className="review-item "+(ok?"correct":"wrong");
+    div.textContent=(i+1)+". "+(ok?"✓ Дұрыс":"✗ Қате")+". Дұрыс жауап: "+letters[item.c]+") "+item.a[item.c];
+    rev.append(div);
+  });
+
+  document.getElementById("mathResultPanel").style.display="block";
+  document.getElementById("mathResultPanel").scrollIntoView({behavior:"smooth",block:"start"});
+
+  // Мұғалім журналына сақтау
+  saveResultToTeacher({
+    name, cls, subject: 'Математика',
+    details: `${correct} / 5`,
+    score: `${correct} / 5`
+  });
+});
+
+document.getElementById("mathWhatsAppBtn").addEventListener("click",function(){
+  if(!lastMathResult) return;
+  const msg="AI QADAM KIDS — Математика\nОқушы: "+lastMathResult.name+"\nСыныбы: "+lastMathResult.cls+"\nНәтиже: "+lastMathResult.correct+"/5 ұпай";
+  window.open("https://wa.me/77074674640?text="+encodeURIComponent(msg),"_blank");
+});
+
+/* ================= МҰҒАЛІМ ПАНЕЛІНІҢ БАЗАСЫ ================= */
+function getStoredResults(){
+  try{
+    return JSON.parse(localStorage.getItem('ai_qadam_data') || '[]');
+  }catch(e){return [];}
+}
+
+function saveResultToTeacher(record){
+  const data = getStoredResults();
+  record.time = new Date().toLocaleDateString('kk-KZ', {hour:'2-digit',minute:'2-digit'});
+  data.unshift(record);
+  localStorage.setItem('ai_qadam_data', JSON.stringify(data));
+}
+
+function renderTeacherResults(){
+  const filter = document.getElementById('subjectFilter').value;
+  const data = getStoredResults();
+  const tbody = document.getElementById('teacherTableBody');
+  tbody.innerHTML = '';
+
+  const filtered = filter==='all' ? data : data.filter(d=>d.subject===filter);
+
+  if(filtered.length===0){
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">Әзірге бұл пән бойынша нәтиже жоқ</td></tr>';
+    return;
+  }
+
+  filtered.forEach((r, i)=>{
+    const tr = document.createElement('tr');
+    const badgeClass = r.subject==='Математика' ? 'badge-math' : 'badge-lit';
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td><strong>${r.name}</strong></td>
+      <td>${r.cls}</td>
+      <td><span class="badge ${badgeClass}">${r.subject}</span></td>
+      <td>${r.details}</td>
+      <td><strong>${r.score}</strong></td>
+      <td style="color:var(--muted);font-size:12px">${r.time}</td>
+    `;
+    tbody.append(tr);
+  });
+}
+
+function clearTeacherData(){
+  if(confirm("Мұғалім журналындағы барлық деректерді өшіруді қалайсыз ба?")){
+    localStorage.removeItem('ai_qadam_data');
+    renderTeacherResults();
+  }
+}
+</script>
+</body>
+</html>
